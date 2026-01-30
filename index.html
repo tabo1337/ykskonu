@@ -1102,6 +1102,104 @@
             color: white;
         }
 
+        /* Love Modal */
+        .love-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 182, 193, 0.3);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .love-modal-overlay.active { display: flex; }
+
+        .love-modal {
+            background: linear-gradient(135deg, #fff0f3 0%, #ffe4ec 100%);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(255, 105, 135, 0.3);
+            border: 2px solid #ffb6c1;
+            animation: lovePopIn 0.5s ease;
+        }
+
+        @keyframes lovePopIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .love-modal .heart-icon {
+            font-size: 5rem;
+            color: #ff6b8a;
+            animation: heartBeat 1s infinite;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .love-modal h2 {
+            color: #d63384;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .love-modal p {
+            color: #ff6b8a;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        .love-modal-btn {
+            padding: 12px 40px;
+            background: linear-gradient(135deg, #ff6b8a, #ff8fab);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.2s;
+        }
+
+        .love-modal-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .floating-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: floatUp 3s ease-in infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
         /* Modal */
         .modal-overlay {
             display: none;
@@ -1425,6 +1523,17 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Love Modal -->
+    <div class="love-modal-overlay" id="loveModalOverlay">
+        <div class="floating-hearts" id="floatingHearts"></div>
+        <div class="love-modal">
+            <span class="heart-icon">💕</span>
+            <h2>Hoş geldin canım!</h2>
+            <p>Seni seviyorum bi tanem 💖</p>
+            <button class="love-modal-btn" onclick="closeLoveModal()">💝 Teşekkürler</button>
         </div>
     </div>
 
@@ -1796,6 +1905,9 @@
         let editingDenemeId = null;
         let isSaving = false;
 
+        // Special users for love message
+        const specialUsers = ['mina', 'larsaysx', 'vesperia'];
+
         // Helper function to get topic count
         function getTopicCount(subjects) {
             let count = 0;
@@ -1901,6 +2013,11 @@
             // Apply saved theme
             applyTheme(userData.theme || 'purple');
 
+            // Check for special users
+            if (specialUsers.includes(currentUser.toLowerCase())) {
+                showLoveModal();
+            }
+
             renderSubjects();
             updateStats();
             renderCharts();
@@ -1916,6 +2033,36 @@
             document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('usernameInput').value = '';
             document.documentElement.removeAttribute('data-theme');
+        }
+
+        // Love Modal Functions
+        function showLoveModal() {
+            const overlay = document.getElementById('loveModalOverlay');
+            overlay.classList.add('active');
+            createFloatingHearts();
+        }
+
+        function closeLoveModal() {
+            const overlay = document.getElementById('loveModalOverlay');
+            overlay.classList.remove('active');
+            document.getElementById('floatingHearts').innerHTML = '';
+        }
+
+        function createFloatingHearts() {
+            const container = document.getElementById('floatingHearts');
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '❤️', '💘', '💞'];
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('span');
+                    heart.className = 'floating-heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+                    container.appendChild(heart);
+                }, i * 150);
+            }
         }
 
         // Theme Functions
