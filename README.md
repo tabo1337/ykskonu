@@ -2,7 +2,7 @@
 
 Siz ülkemizin geleceği gençler için modern ve kullanıcı dostu bir YKS (TYT & AYT Sayısal) çalışma takip uygulaması.
 
-![YKS Tracker](https://img.shields.io/badge/YKS-2024-purple?style=for-the-badge)
+![YKS Tracker](https://img.shields.io/badge/YKS-2026-purple?style=for-the-badge)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
@@ -109,7 +109,7 @@ YKS yolculuğunuzda başarılar! Düzenli çalışma ve takip, başarının anah
 ---
 
 <p align="center">
-  <img src="ataturk.jpg" alt="Mustafa Kemal Atatürk" width="200"/>
+  <img src="ataturk.jpg" alt="Mustafa Kemal Atatürk" width="300"/>
 </p>
 
 <p align="center">
@@ -125,3 +125,4 @@ YKS yolculuğunuzda başarılar! Düzenli çalışma ve takip, başarının anah
 <p align="center">
   Made with 💜 for YKS students
 </p>
+
