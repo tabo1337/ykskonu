@@ -803,6 +803,48 @@
         .deneme-form { display: none; }
         .deneme-form.active { display: block; }
 
+        /* Branş Denemesi */
+        .brans-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .brans-btn {
+            padding: 15px 10px;
+            border: 2px solid var(--primary-light);
+            background: transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            color: var(--primary);
+            transition: background-color 0.2s, color 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .brans-btn i { font-size: 1.3rem; }
+
+        .brans-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .brans-btn:hover:not(.active) {
+            background: #f3e8ff;
+        }
+
+        @media (max-width: 600px) {
+            .brans-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr auto;
@@ -1476,6 +1518,7 @@
                         <div class="deneme-tabs">
                             <button class="deneme-tab-btn active" onclick="switchDenemeTab('tyt')">TYT</button>
                             <button class="deneme-tab-btn" onclick="switchDenemeTab('ayt')">AYT Sayısal</button>
+                            <button class="deneme-tab-btn" onclick="switchDenemeTab('brans')">Branş</button>
                         </div>
 
                         <div class="deneme-date">
@@ -1485,6 +1528,39 @@
 
                         <div class="deneme-form active" id="tytDenemeForm"></div>
                         <div class="deneme-form" id="aytDenemeForm"></div>
+                        
+                        <!-- Branş Denemesi Formu -->
+                        <div class="deneme-form" id="bransDenemeForm">
+                            <div class="brans-selector">
+                                <button class="brans-btn active" onclick="selectBransCategory('matematik')" data-brans="matematik">
+                                    <i class="fas fa-calculator"></i>
+                                    <span>Matematik</span>
+                                </button>
+                                <button class="brans-btn" onclick="selectBransCategory('geometri')" data-brans="geometri">
+                                    <i class="fas fa-shapes"></i>
+                                    <span>Geometri</span>
+                                </button>
+                                <button class="brans-btn" onclick="selectBransCategory('turkce')" data-brans="turkce">
+                                    <i class="fas fa-pen-fancy"></i>
+                                    <span>Türkçe</span>
+                                </button>
+                                <button class="brans-btn" onclick="selectBransCategory('fen')" data-brans="fen">
+                                    <i class="fas fa-flask"></i>
+                                    <span>Fen</span>
+                                </button>
+                                <button class="brans-btn" onclick="selectBransCategory('sosyal')" data-brans="sosyal">
+                                    <i class="fas fa-landmark"></i>
+                                    <span>Sosyal</span>
+                                </button>
+                            </div>
+                            
+                            <div id="bransFormContent"></div>
+                            
+                            <div class="net-display" id="bransNetDisplay">
+                                <div class="net-value" id="bransCurrentNet">0.00</div>
+                                <div class="net-label">Toplam Net</div>
+                            </div>
+                        </div>
 
                         <div class="net-display">
                             <div class="net-label">Toplam Net</div>
@@ -1904,9 +1980,35 @@
         let tempWrongTopics = {};
         let editingDenemeId = null;
         let isSaving = false;
+        let currentBransCategory = 'matematik';
+        let currentBransDers = '';
 
         // Special users for love message
         const specialUsers = ['mina', 'larsaysx', 'vesperia'];
+
+        // Branş kategorileri ve dersleri
+        const bransKategorileri = {
+            matematik: {
+                name: 'Matematik',
+                dersler: ['matematik', 'geometri']
+            },
+            geometri: {
+                name: 'Geometri',
+                dersler: ['geometri']
+            },
+            turkce: {
+                name: 'Türkçe',
+                dersler: ['turkce']
+            },
+            fen: {
+                name: 'Fen',
+                dersler: ['fizik', 'kimya', 'biyoloji']
+            },
+            sosyal: {
+                name: 'Sosyal',
+                dersler: ['tarih', 'cografya', 'felsefe', 'din']
+            }
+        };
 
         // Helper function to get topic count
         function getTopicCount(subjects) {
@@ -1980,6 +2082,7 @@
             
             if (!userData.wrongTopics) userData.wrongTopics = { tyt: {}, ayt: {} };
             if (!userData.denemeler) userData.denemeler = [];
+            if (!userData.bransDenemeler) userData.bransDenemeler = [];
             if (!userData.theme) userData.theme = 'purple';
         }
 
@@ -2389,8 +2492,120 @@
             document.querySelectorAll('.deneme-tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.deneme-form').forEach(form => form.classList.remove('active'));
             event.target.classList.add('active');
-            document.getElementById(type + 'DenemeForm').classList.add('active');
-            calculateNet();
+            
+            if (type === 'brans') {
+                document.getElementById('bransDenemeForm').classList.add('active');
+                selectBransCategory('matematik');
+            } else {
+                document.getElementById(type + 'DenemeForm').classList.add('active');
+                calculateNet();
+            }
+        }
+
+        function selectBransCategory(category) {
+            currentBransCategory = category;
+            
+            document.querySelectorAll('.brans-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.brans === category);
+            });
+            
+            const dersler = bransKategorileri[category].dersler;
+            tempWrongTopics.brans = {};
+            
+            let formHtml = '';
+            dersler.forEach(ders => {
+                const dersData = tytSubjects[ders] || aytSubjects[ders];
+                if (dersData) {
+                    tempWrongTopics.brans[ders] = [];
+                    formHtml += `
+                        <div class="form-row">
+                            <label>${dersData.name}</label>
+                            <input type="number" id="brans_${ders}_dogru" placeholder="Doğru" min="0" oninput="calculateBransNet()">
+                            <input type="number" id="brans_${ders}_yanlis" placeholder="Yanlış" min="0" oninput="calculateBransNet()">
+                            <input type="number" id="brans_${ders}_bos" placeholder="Boş" min="0">
+                            <button class="wrong-topics-btn" id="btn_brans_${ders}" onclick="openBransWrongTopicsModal('${ders}')">
+                                <i class="fas fa-list"></i> Konular
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+            
+            document.getElementById('bransFormContent').innerHTML = formHtml;
+            calculateBransNet();
+        }
+
+        function calculateBransNet() {
+            const dersler = bransKategorileri[currentBransCategory].dersler;
+            let totalNet = 0;
+            
+            dersler.forEach(ders => {
+                const dogru = parseInt(document.getElementById(`brans_${ders}_dogru`)?.value) || 0;
+                const yanlis = parseInt(document.getElementById(`brans_${ders}_yanlis`)?.value) || 0;
+                totalNet += dogru - (yanlis / 4);
+            });
+            
+            document.getElementById('bransCurrentNet').textContent = totalNet.toFixed(2);
+        }
+
+        function openBransWrongTopicsModal(ders) {
+            currentBransDers = ders;
+            const dersData = tytSubjects[ders] || aytSubjects[ders];
+            currentModalSubject = ders;
+            
+            const modalTopics = document.getElementById('modalTopics');
+            modalTopics.innerHTML = dersData.topics.map((topic, tIndex) => {
+                const hasSubtopics = topic.subtopics && topic.subtopics.length > 0;
+                const isSelected = (tempWrongTopics.brans?.[currentBransDers] || []).includes(String(tIndex));
+                
+                let html = `
+                    <div class="modal-topic-item">
+                        <div class="modal-topic-header ${isSelected ? 'selected' : ''}" onclick="toggleBransModalTopic('${tIndex}', this)">
+                            <span>${topic.name}</span>
+                            ${hasSubtopics ? `<button class="modal-expand-btn" onclick="event.stopPropagation(); toggleBransModalSubtopics(this, ${tIndex})"><i class="fas fa-plus"></i></button>` : ''}
+                        </div>
+                `;
+                
+                if (hasSubtopics) {
+                    html += `<div class="modal-subtopics" id="bransModalSub_${tIndex}">`;
+                    topic.subtopics.forEach((sub, sIndex) => {
+                        const subId = `${tIndex}_${sIndex}`;
+                        const isSubSelected = (tempWrongTopics.brans?.[currentBransDers] || []).includes(subId);
+                        html += `
+                            <div class="modal-subtopic-item ${isSubSelected ? 'selected' : ''}" onclick="toggleBransModalTopic('${subId}', this)">
+                                ${sub}
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+                
+                html += `</div>`;
+                return html;
+            }).join('');
+            
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function toggleBransModalTopic(topicId, element) {
+            if (!tempWrongTopics.brans) tempWrongTopics.brans = {};
+            if (!tempWrongTopics.brans[currentBransDers]) tempWrongTopics.brans[currentBransDers] = [];
+            
+            const index = tempWrongTopics.brans[currentBransDers].indexOf(topicId);
+            if (index > -1) {
+                tempWrongTopics.brans[currentBransDers].splice(index, 1);
+                element.classList.remove('selected');
+            } else {
+                tempWrongTopics.brans[currentBransDers].push(topicId);
+                element.classList.add('selected');
+            }
+        }
+
+        function toggleBransModalSubtopics(btn, tIndex) {
+            const container = document.getElementById(`bransModalSub_${tIndex}`);
+            const icon = btn.querySelector('i');
+            container.classList.toggle('open');
+            icon.className = container.classList.contains('open') ? 'fas fa-minus' : 'fas fa-plus';
         }
 
         function calculateNet() {
@@ -2468,6 +2683,24 @@
         }
 
         function saveWrongTopics() {
+            // Check if this is a branş modal
+            if (currentDenemeType === 'brans' && typeof currentModalSubject === 'string') {
+                // Branş modal - data is already saved via toggleBransModalTopic
+                const count = (tempWrongTopics.brans?.[currentModalSubject] || []).length;
+                const btn = document.getElementById(`btn_brans_${currentModalSubject}`);
+                if (btn) {
+                    if (count > 0) {
+                        btn.classList.add('has-selection');
+                        btn.innerHTML = `<i class="fas fa-check"></i> ${count} konu`;
+                    } else {
+                        btn.classList.remove('has-selection');
+                        btn.innerHTML = `<i class="fas fa-list"></i> Konular`;
+                    }
+                }
+                closeModal();
+                return;
+            }
+            
             const { type, subjectKey } = currentModalSubject;
             const selectedItems = document.querySelectorAll('#modalTopics .modal-topic-item.selected, #modalTopics .modal-subtopic-item.selected');
             
@@ -2490,6 +2723,12 @@
         function saveDeneme() {
             const date = document.getElementById('denemeDate').value;
             if (!date) { alert('Lütfen tarih seçin!'); return; }
+
+            // Branş denemesi kaydı
+            if (currentDenemeType === 'brans') {
+                saveBransDeneme(date);
+                return;
+            }
 
             const subjects = currentDenemeType === 'tyt' ? tytSubjects : aytSubjects;
             
@@ -2697,8 +2936,15 @@
         function renderDenemeHistory() {
             const historyContainer = document.getElementById('denemeHistory');
             const denemeler = userData.denemeler || [];
+            const bransDenemeler = userData.bransDenemeler || [];
+            
+            // Combine and sort all denemeler
+            const allDenemeler = [
+                ...denemeler.map(d => ({ ...d, isBrans: false })),
+                ...bransDenemeler.map(d => ({ ...d, isBrans: true }))
+            ];
 
-            if (denemeler.length === 0) {
+            if (allDenemeler.length === 0) {
                 historyContainer.innerHTML = `
                     <div class="no-eksik" style="grid-column: 1 / -1;">
                         <i class="fas fa-clipboard-list" style="color: var(--primary);"></i>
@@ -2708,31 +2954,172 @@
                 return;
             }
 
-            const sortedDenemeler = [...denemeler].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const sortedDenemeler = allDenemeler.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             historyContainer.innerHTML = sortedDenemeler.map(deneme => {
-                const subjects = deneme.type === 'tyt' ? tytSubjects : aytSubjects;
-                const subjectsHtml = Object.entries(deneme.subjects || {}).map(([key, data]) => 
-                    `<span class="history-subject">${subjects[key]?.name?.substring(0, 3) || key}: <span class="d">${data.dogru}D</span> <span class="y">${data.yanlis}Y</span></span>`
-                ).join('');
-
-                return `
-                    <div class="history-card">
-                        <span class="type-badge ${deneme.type}">${deneme.type.toUpperCase()}</span>
-                        <div class="date"><i class="fas fa-calendar"></i> ${new Date(deneme.date).toLocaleDateString('tr-TR')}</div>
-                        <div class="net-info">${(deneme.totalNet || 0).toFixed(2)} Net</div>
-                        <div class="history-subjects">${subjectsHtml}</div>
-                        <div class="history-actions">
-                            <button class="edit-history-btn" onclick="editDeneme(${deneme.id})">
-                                <i class="fas fa-edit"></i> Düzenle
-                            </button>
-                            <button class="delete-history-btn" onclick="deleteDeneme(${deneme.id})">
-                                <i class="fas fa-trash"></i> Sil
-                            </button>
+                if (deneme.isBrans) {
+                    // Branş denemesi kartı
+                    const categoryIcon = {
+                        matematik: 'fa-calculator',
+                        geometri: 'fa-shapes',
+                        turkce: 'fa-pen-fancy',
+                        fen: 'fa-flask',
+                        sosyal: 'fa-landmark'
+                    }[deneme.category] || 'fa-book';
+                    
+                    // Generate subjects HTML from dersler
+                    const derslerHtml = Object.entries(deneme.dersler || {}).map(([ders, data]) => {
+                        const dersData = tytSubjects[ders] || aytSubjects[ders];
+                        return `<span class="history-subject">${dersData?.name?.substring(0, 3) || ders}: <span class="d">${data.dogru}D</span> <span class="y">${data.yanlis}Y</span></span>`;
+                    }).join('');
+                    
+                    return `
+                        <div class="history-card">
+                            <span class="type-badge brans" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">BRANŞ</span>
+                            <div class="date"><i class="fas fa-calendar"></i> ${new Date(deneme.date).toLocaleDateString('tr-TR')}</div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin: 10px 0;">
+                                <i class="fas ${categoryIcon}" style="color: var(--primary);"></i>
+                                <strong>${deneme.categoryName || bransKategorileri[deneme.category]?.name || deneme.category}</strong>
+                            </div>
+                            <div class="net-info">${(deneme.totalNet || 0).toFixed(2)} Net</div>
+                            <div class="history-subjects">${derslerHtml}</div>
+                            <div class="history-actions">
+                                <button class="delete-history-btn" onclick="deleteBransDeneme(${deneme.id})">
+                                    <i class="fas fa-trash"></i> Sil
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    // Normal TYT/AYT denemesi kartı
+                    const subjects = deneme.type === 'tyt' ? tytSubjects : aytSubjects;
+                    const subjectsHtml = Object.entries(deneme.subjects || {}).map(([key, data]) => 
+                        `<span class="history-subject">${subjects[key]?.name?.substring(0, 3) || key}: <span class="d">${data.dogru}D</span> <span class="y">${data.yanlis}Y</span></span>`
+                    ).join('');
+
+                    return `
+                        <div class="history-card">
+                            <span class="type-badge ${deneme.type}">${deneme.type.toUpperCase()}</span>
+                            <div class="date"><i class="fas fa-calendar"></i> ${new Date(deneme.date).toLocaleDateString('tr-TR')}</div>
+                            <div class="net-info">${(deneme.totalNet || 0).toFixed(2)} Net</div>
+                            <div class="history-subjects">${subjectsHtml}</div>
+                            <div class="history-actions">
+                                <button class="edit-history-btn" onclick="editDeneme(${deneme.id})">
+                                    <i class="fas fa-edit"></i> Düzenle
+                                </button>
+                                <button class="delete-history-btn" onclick="deleteDeneme(${deneme.id})">
+                                    <i class="fas fa-trash"></i> Sil
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
             }).join('');
+        }
+
+        function saveBransDeneme(date) {
+            const dersler = bransKategorileri[currentBransCategory].dersler;
+            let hasData = false;
+            let totalNet = 0;
+            const derslerData = {};
+            
+            // Collect data from all subjects
+            dersler.forEach(ders => {
+                const dogru = parseInt(document.getElementById(`brans_${ders}_dogru`)?.value) || 0;
+                const yanlis = parseInt(document.getElementById(`brans_${ders}_yanlis`)?.value) || 0;
+                if (dogru > 0 || yanlis > 0) {
+                    hasData = true;
+                    const net = dogru - (yanlis / 4);
+                    totalNet += net;
+                    derslerData[ders] = { dogru, yanlis, net, wrongTopics: tempWrongTopics.brans?.[ders] || [] };
+                }
+            });
+            
+            if (!hasData) { alert('Lütfen en az bir ders için doğru veya yanlış sayısı girin!'); return; }
+            
+            // Initialize bransDenemeler if not exists
+            if (!userData.bransDenemeler) userData.bransDenemeler = [];
+            
+            const bransData = {
+                id: Date.now(),
+                type: 'brans',
+                category: currentBransCategory,
+                categoryName: bransKategorileri[currentBransCategory].name,
+                date: date,
+                dersler: derslerData,
+                totalNet: totalNet
+            };
+            
+            // Add wrong topics to global count
+            for (const [ders, data] of Object.entries(derslerData)) {
+                const targetType = tytSubjects[ders] ? 'tyt' : 'ayt';
+                if (data.wrongTopics && data.wrongTopics.length > 0) {
+                    if (!userData.wrongTopics[targetType][ders]) {
+                        userData.wrongTopics[targetType][ders] = {};
+                    }
+                    data.wrongTopics.forEach(topicId => {
+                        userData.wrongTopics[targetType][ders][topicId] = 
+                            (userData.wrongTopics[targetType][ders][topicId] || 0) + 1;
+                    });
+                }
+            }
+            
+            userData.bransDenemeler.push(bransData);
+            saveUserData();
+            
+            // Reset form
+            dersler.forEach(ders => {
+                const dogruInput = document.getElementById(`brans_${ders}_dogru`);
+                const yanlisInput = document.getElementById(`brans_${ders}_yanlis`);
+                const bosInput = document.getElementById(`brans_${ders}_bos`);
+                const btn = document.getElementById(`btn_brans_${ders}`);
+                if (dogruInput) dogruInput.value = '';
+                if (yanlisInput) yanlisInput.value = '';
+                if (bosInput) bosInput.value = '';
+                if (btn) {
+                    btn.classList.remove('has-selection');
+                    btn.innerHTML = '<i class="fas fa-list"></i> Konular';
+                }
+            });
+            document.getElementById('bransCurrentNet').textContent = '0.00';
+            tempWrongTopics.brans = {};
+            
+            renderDenemeHistory();
+            renderEksikKonular();
+            renderSubjects();
+            alert('Branş denemesi kaydedildi! 🎉');
+        }
+
+        function deleteBransDeneme(id) {
+            if (!confirm('Bu branş denemesini silmek istediğinize emin misiniz?')) return;
+            
+            const index = userData.bransDenemeler.findIndex(d => d.id === id);
+            if (index > -1) {
+                const deneme = userData.bransDenemeler[index];
+                
+                // Remove wrong topics from all subjects in this deneme
+                if (deneme.dersler) {
+                    for (const [ders, data] of Object.entries(deneme.dersler)) {
+                        const targetType = tytSubjects[ders] ? 'tyt' : 'ayt';
+                        if (data.wrongTopics && data.wrongTopics.length > 0) {
+                            data.wrongTopics.forEach(topicId => {
+                                if (userData.wrongTopics[targetType]?.[ders]?.[topicId]) {
+                                    userData.wrongTopics[targetType][ders][topicId]--;
+                                    if (userData.wrongTopics[targetType][ders][topicId] <= 0) {
+                                        delete userData.wrongTopics[targetType][ders][topicId];
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+                
+                userData.bransDenemeler.splice(index, 1);
+                saveUserData();
+                renderDenemeHistory();
+                renderEksikKonular();
+                renderSubjects();
+            }
         }
 
         function deleteDeneme(id) {
