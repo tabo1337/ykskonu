@@ -117,7 +117,7 @@ YKS yolculuğunuzda başarılar! Düzenli çalışma ve takip, başarının anah
 </p>
 
 <p align="center">
-  <b>— Mustafa Kemal Atatürk</b>
+  <b>— Gazi Mustafa Kemal Atatürk</b>
 </p>
 
 ---
@@ -125,4 +125,5 @@ YKS yolculuğunuzda başarılar! Düzenli çalışma ve takip, başarının anah
 <p align="center">
   Made with 💜 for YKS students
 </p>
+
 
