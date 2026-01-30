@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YKS Çalışma Takip 💜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #9b7ed9;
+            --primary-light: #c4b5fd;
+            --secondary: #f0abfc;
+            --accent: #67e8f9;
+            --bg-gradient: linear-gradient(135deg, #fdf4ff 0%, #f5f3ff 50%, #ecfeff 100%);
+            --card-bg: #ffffff;
+            --text: #4c1d95;
+            --text-light: #7c3aed;
+            --success: #a7f3d0;
+            --success-dark: #10b981;
+            --danger: #fecaca;
+            --danger-dark: #ef4444;
+            --warning: #fef3c7;
+            --warning-dark: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        /* Login Screen */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 50px 40px;
+            box-shadow: 0 4px 20px rgba(155, 126, 217, 0.15);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid #f3e8ff;
+        }
+
+        .login-card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-card .subtitle {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .login-card .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--primary-light);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            text-align: center;
+        }
+
+        .login-input:focus {
+            border-color: var(--primary);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .login-btn:hover { opacity: 0.95; }
+        .login-btn:active { transform: scale(0.98); }
+
+        /* Main App */
+        .app-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--card-bg);
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(155, 126, 217, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: transparent;
+            border: 2px solid var(--primary-light);
+            border-radius: 20px;
+            color: var(--primary);
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(155, 126, 217, 0.08);
+            border: 1px solid #f3e8ff;
+        }
+
+        .stat-card h3 {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-percentage {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #f3e8ff;
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        .stat-detail {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            border: none;
+            background: var(--card-bg);
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-light);
+            transition: background-color 0.2s, color 0.2s;
+            box-shadow: 0 2px 8px rgba(155, 126, 217, 0.08);
+        }
+
+        .tab-btn:hover { background: #f3e8ff; }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        /* Content */
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Subject Cards */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .subject-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(155, 126, 217, 0.08);
+            border: 1px solid #f3e8ff;
+        }
+
+        .subject-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .subject-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subject-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .subject-title h3 { font-size: 1.3rem; }
+
+        .subject-progress { text-align: right; }
+        .subject-progress .percentage {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .subject-progress .count {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .topics-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .topics-list.open {
+            max-height: 5000px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: #faf5ff;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .topic-item:hover { background: #f3e8ff; }
+        .topic-item:active { background: #ede9fe; }
+        .topic-item.completed { background: var(--success); }
+        .topic-item.completed .topic-text {
+            text-decoration: line-through;
+            color: var(--success-dark);
+        }
+
+        .topic-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .topic-item.completed .topic-checkbox {
+            background: var(--success-dark);
+            border-color: var(--success-dark);
+            color: white;
+        }
+
+        .topic-text { flex: 1; font-weight: 600; }
+
+        .topic-wrong-count {
+            background: var(--danger);
+            color: var(--danger-dark);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .toggle-icon {
+            font-size: 1.2rem;
+            color: var(--primary-light);
+            transition: transform 0.2s;
+        }
+
+        .subject-header.open .toggle-icon { transform: rotate(180deg); }
+
+        /* Subtopics */
+        .subtopics-container {
+            margin-left: 36px;
+            padding-left: 15px;
+            border-left: 2px solid #e9d5ff;
+            display: none;
+        }
+        .subtopics-container.open { display: block; }
+
+        .subtopic-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: #fdf4ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .subtopic-item:hover { background: #fae8ff; }
+        .subtopic-item.completed { background: #d1fae5; }
+        .subtopic-item.completed .subtopic-text {
+            text-decoration: line-through;
+            color: var(--success-dark);
+        }
+
+        .subtopic-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--primary-light);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.7rem;
+        }
+        .subtopic-item.completed .subtopic-checkbox {
+            background: var(--success-dark);
+            border-color: var(--success-dark);
+            color: white;
+        }
+
+        .subtopic-text { flex: 1; }
+
+        .topic-expand-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .topic-expand-btn:hover { background: var(--primary); }
+
+        /* Colors for subjects */
+        .bg-turkish { background: linear-gradient(135deg, #f472b6, #ec4899); }
+        .bg-math { background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
+        .bg-science { background: linear-gradient(135deg, #67e8f9, #06b6d4); }
+        .bg-social { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+        .bg-physics { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+        .bg-chemistry { background: linear-gradient(135deg, #34d399, #10b981); }
+        .bg-biology { background: linear-gradient(135deg, #fb7185, #f43f5e); }
+        .bg-geometry { background: linear-gradient(135deg, #c084fc, #a855f7); }
+
+        /* Charts Section */
+        .charts-section {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(155, 126, 217, 0.08);
+            border: 1px solid #f3e8ff;
+        }
+
+        .chart-card h3 {
+            margin-bottom: 20px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bar-label {
+            width: 80px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 25px;
+            background: #f3e8ff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            min-width: 40px;
+        }
+
+        /* Motivational Quote */
+        .motivation-banner {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .motivation-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            padding: 30px 40px;
+            color: white;
+            text-align: center;
+        }
+
+        .motivation-card .quote { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }
+        .motivation-card .author { font-size: 1rem; opacity: 0.9; }
+
+        /* Deneme Analizi Styles */
+        .deneme-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .deneme-form-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(155, 126, 217, 0.08);
+            border: 1px solid #f3e8ff;
+        }
+
+        .deneme-form-card h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .deneme-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .deneme-tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--primary-light);
+            background: transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            color: var(--primary);
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .deneme-tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .deneme-form { display: none; }
+        .deneme-form.active { display: block; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 12px;
+            background: #faf5ff;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .form-row label { font-weight: 700; color: var(--text); }
+
+        .form-row input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--primary-light);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-row input:focus { border-color: var(--primary); }
+
+        .wrong-topics-btn {
+            padding: 8px 12px;
+            background: var(--danger);
+            border: none;
+            border-radius: 10px;
+            color: var(--danger-dark);
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .wrong-topics-btn:hover { background: #fca5a5; }
+        .wrong-topics-btn.has-selection {
+            background: var(--danger-dark);
+            color: white;
+        }
+
+        .deneme-date { margin-bottom: 15px; }
+        .deneme-date label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .deneme-date input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--primary-light);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .save-deneme-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 15px;
+        }
+
+        .save-deneme-btn:hover { opacity: 0.95; }
+        .save-deneme-btn:active { transform: scale(0.98); }
+
+        .cancel-edit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f3e8ff;
+            border: none;
+            border-radius: 12px;
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Net Display */
+        .net-display {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .net-display .net-value { font-size: 2.5rem; font-weight: 800; }
+        .net-display .net-label { font-size: 0.9rem; opacity: 0.9; }
+
+        /* Eksik Konular Section */
+        .eksik-konular-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(155, 126, 217, 0.08);
+            border: 1px solid #f3e8ff;
+        }
+
+        .eksik-konular-card h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .eksik-list { max-height: 400px; overflow-y: auto; }
+
+        .eksik-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: var(--danger);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .eksik-item .topic-info { flex: 1; }
+        .eksik-item .topic-name { font-weight: 700; color: var(--text); }
+        .eksik-item .subject-name { font-size: 0.85rem; color: var(--text-light); }
+
+        .eksik-item .wrong-badge {
+            background: var(--danger-dark);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .eksik-item .eksik-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tekrar-btn {
+            padding: 6px 12px;
+            background: var(--success);
+            border: none;
+            border-radius: 10px;
+            color: var(--success-dark);
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tekrar-btn:hover {
+            background: var(--success-dark);
+            color: white;
+        }
+
+        .no-eksik {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .no-eksik i {
+            font-size: 3rem;
+            color: var(--success-dark);
+            margin-bottom: 15px;
+        }
+
+        /* Deneme History */
+        .deneme-history { margin-top: 30px; }
+        .deneme-history h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .history-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(155, 126, 217, 0.08);
+            border: 1px solid #f3e8ff;
+            position: relative;
+        }
+
+        .history-card .date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .history-card .type-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .history-card .type-badge.tyt {
+            background: linear-gradient(135deg, #f472b6, #ec4899);
+            color: white;
+        }
+
+        .history-card .type-badge.ayt {
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            color: white;
+        }
+
+        .history-card .net-info {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .history-subjects {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .history-subject {
+            background: #f3e8ff;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .history-subject .d { color: var(--success-dark); }
+        .history-subject .y { color: var(--danger-dark); }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+        }
+
+        .edit-history-btn, .delete-history-btn {
+            padding: 5px 10px;
+            background: transparent;
+            border: 1px solid;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .edit-history-btn {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .edit-history-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .delete-history-btn {
+            border-color: var(--danger-dark);
+            color: var(--danger-dark);
+        }
+        .delete-history-btn:hover {
+            background: var(--danger-dark);
+            color: white;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-topics { max-height: 400px; overflow-y: auto; }
+
+        .modal-topic-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: #faf5ff;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .modal-topic-item:hover { background: #f3e8ff; }
+        .modal-topic-item.selected { background: var(--danger); }
+
+        .modal-topic-item .checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--primary-light);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-topic-item.selected .checkbox {
+            background: var(--danger-dark);
+            border-color: var(--danger-dark);
+            color: white;
+        }
+
+        .modal-topic-name { flex: 1; font-weight: 600; }
+
+        /* Subtopic selection in modal */
+        .modal-subtopics {
+            margin-left: 34px;
+            padding-left: 10px;
+            border-left: 2px solid #e9d5ff;
+            display: none;
+        }
+        .modal-subtopics.open { display: block; }
+
+        .modal-subtopic-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: #fdf4ff;
+            border-radius: 8px;
+            margin: 4px 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .modal-subtopic-item:hover { background: #fae8ff; }
+        .modal-subtopic-item.selected { background: #fed7d7; }
+
+        .modal-subtopic-item .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--primary-light);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        .modal-subtopic-item.selected .checkbox {
+            background: var(--danger-dark);
+            border-color: var(--danger-dark);
+            color: white;
+        }
+
+        .modal-expand-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+        }
+
+        .modal-btn:active { transform: scale(0.98); }
+        .modal-btn.cancel { background: #f3e8ff; color: var(--primary); }
+        .modal-btn.save {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .subjects-grid, .deneme-container { grid-template-columns: 1fr; }
+            .header-content { flex-direction: column; text-align: center; }
+            .stat-percentage { font-size: 2.5rem; }
+            .login-card { padding: 40px 25px; }
+            .login-card h1 { font-size: 2rem; }
+            .form-row { grid-template-columns: 1fr; gap: 8px; }
+            .form-row label { text-align: center; }
+            .tabs { justify-content: center; }
+            .tab-btn { padding: 10px 20px; font-size: 0.9rem; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f3e8ff; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="icon">📚✨</div>
+            <h1>YKS Çalışma Takip</h1>
+            <p class="subtitle">Hedefine bir adım daha yaklaş! 💪</p>
+            <input type="text" class="login-input" id="usernameInput" placeholder="Adını yaz..." maxlength="20">
+            <button class="login-btn" onclick="login()">
+                <i class="fas fa-heart"></i> Başla
+            </button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" id="appContainer">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span style="font-size: 1.8rem;">📚</span>
+                    <h1>YKS Takip</h1>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">Merhaba, <span id="displayName"></span>! 💜</span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Çıkış
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="motivation-banner">
+            <div class="motivation-card">
+                <p class="quote" id="motivationQuote">"Başarı, her gün tekrarlanan küçük çabaların toplamıdır."</p>
+                <p class="author">- Robert Collier</p>
+            </div>
+        </div>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <h3><i class="fas fa-book-open" style="color: #ec4899;"></i> TYT Genel İlerleme</h3>
+                <div class="stat-percentage" id="tytOverall">0%</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="tytProgressBar" style="width: 0%"></div>
+                </div>
+                <p class="stat-detail" id="tytDetail">0 / 0 konu tamamlandı</p>
+            </div>
+            <div class="stat-card">
+                <h3><i class="fas fa-calculator" style="color: #8b5cf6;"></i> AYT Sayısal İlerleme</h3>
+                <div class="stat-percentage" id="aytOverall">0%</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="aytProgressBar" style="width: 0%"></div>
+                </div>
+                <p class="stat-detail" id="aytDetail">0 / 0 konu tamamlandı</p>
+            </div>
+            <div class="stat-card">
+                <h3><i class="fas fa-trophy" style="color: #f59e0b;"></i> Toplam İlerleme</h3>
+                <div class="stat-percentage" id="totalOverall">0%</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="totalProgressBar" style="width: 0%"></div>
+                </div>
+                <p class="stat-detail" id="totalDetail">0 / 0 konu tamamlandı</p>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('tyt')">📝 TYT</button>
+                <button class="tab-btn" onclick="switchTab('ayt')">🔬 AYT Sayısal</button>
+                <button class="tab-btn" onclick="switchTab('deneme')">📋 Deneme Analizi</button>
+                <button class="tab-btn" onclick="switchTab('charts')">📊 Grafikler</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="tab-content active" id="tytTab">
+                <div class="subjects-grid" id="tytSubjects"></div>
+            </div>
+
+            <div class="tab-content" id="aytTab">
+                <div class="subjects-grid" id="aytSubjects"></div>
+            </div>
+
+            <div class="tab-content" id="denemeTab">
+                <div class="deneme-container">
+                    <div class="deneme-form-card">
+                        <h3 id="denemeFormTitle"><i class="fas fa-plus-circle" style="color: var(--primary);"></i> Yeni Deneme Ekle</h3>
+                        
+                        <div class="deneme-tabs">
+                            <button class="deneme-tab-btn active" onclick="switchDenemeTab('tyt')">TYT</button>
+                            <button class="deneme-tab-btn" onclick="switchDenemeTab('ayt')">AYT Sayısal</button>
+                        </div>
+
+                        <div class="deneme-date">
+                            <label>Deneme Tarihi</label>
+                            <input type="date" id="denemeDate">
+                        </div>
+
+                        <div class="deneme-form active" id="tytDenemeForm"></div>
+                        <div class="deneme-form" id="aytDenemeForm"></div>
+
+                        <div class="net-display">
+                            <div class="net-label">Toplam Net</div>
+                            <div class="net-value" id="currentNet">0.00</div>
+                        </div>
+
+                        <button class="save-deneme-btn" id="saveDenemeBtn" onclick="saveDeneme()">
+                            <i class="fas fa-save"></i> Denemeyi Kaydet
+                        </button>
+                        <button class="cancel-edit-btn" id="cancelEditBtn" onclick="cancelEdit()">
+                            <i class="fas fa-times"></i> İptal
+                        </button>
+                    </div>
+
+                    <div class="eksik-konular-card">
+                        <h3><i class="fas fa-exclamation-triangle" style="color: var(--danger-dark);"></i> En Çok Yanlış Yapılan Konular</h3>
+                        <div class="eksik-list" id="eksikList"></div>
+                    </div>
+                </div>
+
+                <div class="deneme-history">
+                    <h3><i class="fas fa-history" style="color: var(--primary);"></i> Deneme Geçmişi</h3>
+                    <div class="history-grid" id="denemeHistory"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="chartsTab">
+                <div class="charts-section">
+                    <div class="chart-card">
+                        <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> TYT Ders Bazlı İlerleme</h3>
+                        <div class="bar-chart" id="tytChart"></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3><i class="fas fa-chart-bar" style="color: var(--secondary);"></i> AYT Ders Bazlı İlerleme</h3>
+                        <div class="bar-chart" id="aytChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Wrong Topics -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h3><i class="fas fa-times-circle" style="color: var(--danger-dark);"></i> Yanlış Yapılan Konular</h3>
+            <p style="color: var(--text-light); margin-bottom: 15px; font-size: 0.9rem;">Yanlış yaptığın konu ve alt konuları seç:</p>
+            <div class="modal-topics" id="modalTopics"></div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeModal()">İptal</button>
+                <button class="modal-btn save" onclick="saveWrongTopics()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TYT Konuları ve Alt Başlıkları
+        const tytSubjects = {
+            turkce: {
+                name: "Türkçe",
+                icon: "fas fa-pen-fancy",
+                colorClass: "bg-turkish",
+                questionCount: 40,
+                topics: [
+                    { name: "Sözcükte Anlam" },
+                    { name: "Söz Yorumu" },
+                    { name: "Deyim ve Atasözleri" },
+                    { name: "Cümlede Anlam" },
+                    { name: "Paragrafta Anlam" },
+                    { name: "Paragrafta Yapı" },
+                    { name: "Anlatım Bozuklukları" },
+                    { name: "Ses Bilgisi" },
+                    { name: "Yazım Kuralları" },
+                    { name: "Noktalama İşaretleri" },
+                    { name: "Sözcükte Yapı" },
+                    { name: "İsim (Ad)" },
+                    { name: "Sıfat" },
+                    { name: "Zamir (Adıl)" },
+                    { name: "Zarf (Belirteç)" },
+                    { name: "Edat - Bağlaç - Ünlem" },
+                    { name: "Fiil (Eylem)" },
+                    { name: "Fiilimsi (Eylemsi)" },
+                    { name: "Ek Fiil" },
+                    { name: "Cümlenin Ögeleri" },
+                    { name: "Cümle Türleri" },
+                    { name: "Fiilde Çatı" },
+                    { name: "Anlatım Türleri" },
+                    { name: "Paragraf Tamamlama" },
+                    { name: "Paragraf Oluşturma" }
+                ]
+            },
+            matematik: {
+                name: "Matematik",
+                icon: "fas fa-square-root-alt",
+                colorClass: "bg-math",
+                questionCount: 40,
+                topics: [
+                    { name: "Temel Kavramlar", subtopics: ["Doğal Sayılar", "Tam Sayılar", "Asal Sayılar", "Faktöriyel"] },
+                    { name: "Sayı Basamakları", subtopics: ["Basamak Kavramı", "Basamak Çözümlemesi", "Sayı Problemleri"] },
+                    { name: "Bölme ve Bölünebilme", subtopics: ["Bölünebilme Kuralları", "Kalanlı Bölme", "Bölüm-Kalan İlişkisi"] },
+                    { name: "EBOB - EKOK", subtopics: ["EBOB Bulma", "EKOK Bulma", "EBOB-EKOK Problemleri"] },
+                    { name: "Rasyonel Sayılar", subtopics: ["Kesirler", "Ondalık Sayılar", "Devirli Ondalıklar"] },
+                    { name: "Basit Eşitsizlikler", subtopics: ["Eşitsizlik Kuralları", "Eşitsizlik Çözümü"] },
+                    { name: "Mutlak Değer", subtopics: ["Mutlak Değer Tanımı", "Mutlak Değerli Denklemler", "Mutlak Değerli Eşitsizlikler"] },
+                    { name: "Üslü Sayılar", subtopics: ["Üs Kuralları", "Negatif Üs", "Kesirli Üs"] },
+                    { name: "Köklü Sayılar", subtopics: ["Kök Kavramı", "Kök Kuralları", "Köklü İfadelerde İşlemler"] },
+                    { name: "Çarpanlara Ayırma", subtopics: ["Ortak Çarpan", "Özdeşlikler", "Gruplandırma"] },
+                    { name: "Oran - Orantı", subtopics: ["Oran", "Doğru Orantı", "Ters Orantı", "Bileşik Orantı"] },
+                    { name: "Denklem Çözme", subtopics: ["1. Dereceden Denklemler", "Denklem Kurma"] },
+                    { name: "Problemler", subtopics: ["Yaş Problemleri", "İşçi Problemleri", "Havuz Problemleri", "Hareket Problemleri", "Karışım Problemleri", "Yüzde Problemleri", "Kar-Zarar Problemleri"] },
+                    { name: "Kümeler", subtopics: ["Küme Kavramı", "Alt Küme", "Küme İşlemleri", "Venn Şemaları"] },
+                    { name: "Fonksiyonlar", subtopics: ["Fonksiyon Tanımı", "Fonksiyon Çeşitleri", "Bileşke Fonksiyon", "Ters Fonksiyon"] },
+                    { name: "Mantık", subtopics: ["Önermeler", "Bileşik Önermeler", "Koşullu Önermeler"] },
+                    { name: "Polinomlar", subtopics: ["Polinom Tanımı", "Polinom İşlemleri", "Çarpanlara Ayırma"] },
+                    { name: "2. Dereceden Denklemler", subtopics: ["Çözüm Yöntemleri", "Diskriminant", "Kök-Katsayı İlişkisi"] },
+                    { name: "Permütasyon", subtopics: ["Permütasyon Kavramı", "Tekrarlı Permütasyon"] },
+                    { name: "Kombinasyon", subtopics: ["Kombinasyon Kavramı", "Pascal Üçgeni"] },
+                    { name: "Binom", subtopics: ["Binom Açılımı", "Genel Terim"] },
+                    { name: "Olasılık", subtopics: ["Olasılık Kavramı", "Koşullu Olasılık", "Bağımsız Olaylar"] },
+                    { name: "İstatistik", subtopics: ["Ortalama", "Medyan", "Mod", "Standart Sapma"] },
+                    { name: "Karmaşık Sayılar", subtopics: ["Karmaşık Sayı Tanımı", "İşlemler", "Karmaşık Sayının Modülü"] }
+                ]
+            },
+            fizik: {
+                name: "Fizik",
+                icon: "fas fa-atom",
+                colorClass: "bg-physics",
+                questionCount: 7,
+                topics: [
+                    { name: "Fizik Bilimine Giriş", subtopics: ["Fiziksel Büyüklükler", "Birim Sistemleri", "Bilimsel Gösterim"] },
+                    { name: "Madde ve Özellikleri", subtopics: ["Kütle", "Hacim", "Özkütle", "Dayanıklılık"] },
+                    { name: "Hareket ve Kuvvet", subtopics: ["Düzgün Doğrusal Hareket", "Düzgün Hızlanan Hareket", "Serbest Düşme"] },
+                    { name: "Enerji", subtopics: ["Kinetik Enerji", "Potansiyel Enerji", "Enerjinin Korunumu"] },
+                    { name: "Isı ve Sıcaklık", subtopics: ["Isı Kavramı", "Sıcaklık Kavramı", "Isı Alışverişi", "Hal Değişimi"] },
+                    { name: "Elektrostatik", subtopics: ["Elektrik Yükü", "Coulomb Yasası", "Elektrik Alan"] },
+                    { name: "Elektrik Akımı", subtopics: ["Akım", "Direnç", "Ohm Yasası", "Devre Elemanları"] },
+                    { name: "Manyetizma", subtopics: ["Mıknatıslar", "Manyetik Alan", "Elektromıknatıs"] },
+                    { name: "Basınç ve Kaldırma Kuvveti", subtopics: ["Katı Basıncı", "Sıvı Basıncı", "Gaz Basıncı", "Kaldırma Kuvveti"] },
+                    { name: "Dalgalar", subtopics: ["Dalga Çeşitleri", "Dalga Özellikleri", "Ses Dalgaları"] },
+                    { name: "Optik", subtopics: ["Işık ve Özellikleri", "Yansıma", "Kırılma", "Aynalar", "Mercekler"] }
+                ]
+            },
+            kimya: {
+                name: "Kimya",
+                icon: "fas fa-flask",
+                colorClass: "bg-chemistry",
+                questionCount: 7,
+                topics: [
+                    { name: "Kimya Bilimi", subtopics: ["Kimyanın Önemi", "Madde ve Özellikleri", "Simyadan Kimyaya"] },
+                    { name: "Atom ve Periyodik Sistem", subtopics: ["Atom Modelleri", "Elektron Dizilimi", "Periyodik Tablo", "Periyodik Özellikler"] },
+                    { name: "Kimyasal Türler Arası Etkileşimler", subtopics: ["Kimyasal Bağlar", "İyonik Bağ", "Kovalent Bağ", "Metalik Bağ"] },
+                    { name: "Maddenin Halleri", subtopics: ["Katı", "Sıvı", "Gaz", "Plazma", "Hal Değişimleri"] },
+                    { name: "Doğa ve Kimya", subtopics: ["Su ve Hayat", "Hava ve Hayat", "Toprak ve Hayat"] },
+                    { name: "Kimyasal Tepkimeler", subtopics: ["Tepkime Denklemleri", "Tepkime Türleri", "Denkleştirme"] },
+                    { name: "Kimya Her Yerde", subtopics: ["Temizlik Maddeleri", "Kozmetikler", "Polimerler"] },
+                    { name: "Asitler ve Bazlar", subtopics: ["Asit Kavramı", "Baz Kavramı", "pH", "İndikatörler"] },
+                    { name: "Karışımlar", subtopics: ["Homojen Karışımlar", "Heterojen Karışımlar", "Ayırma Yöntemleri"] }
+                ]
+            },
+            biyoloji: {
+                name: "Biyoloji",
+                icon: "fas fa-dna",
+                colorClass: "bg-biology",
+                questionCount: 6,
+                topics: [
+                    { name: "Canlıların Ortak Özellikleri", subtopics: ["Hücresel Yapı", "Beslenme", "Solunum", "Boşaltım", "Hareket", "Üreme"] },
+                    { name: "Canlıların Temel Bileşenleri", subtopics: ["Su", "Mineraller", "Karbonhidratlar", "Yağlar", "Proteinler", "Vitaminler", "Nükleik Asitler"] },
+                    { name: "Hücre ve Organeller", subtopics: ["Hücre Zarı", "Sitoplazma", "Çekirdek", "Organeller", "Hücre Bölünmesi"] },
+                    { name: "Canlıların Sınıflandırılması", subtopics: ["Sınıflandırma Kriterleri", "Alemler", "Virüsler"] },
+                    { name: "Mitoz ve Eşeysiz Üreme", subtopics: ["Mitoz Bölünme", "Eşeysiz Üreme Çeşitleri"] },
+                    { name: "Mayoz ve Eşeyli Üreme", subtopics: ["Mayoz Bölünme", "Gametogenez", "Döllenme"] },
+                    { name: "Kalıtım", subtopics: ["Mendel Genetiği", "Kalıtım Çeşitleri", "Soy Ağacı Analizi"] },
+                    { name: "Ekosistem Ekolojisi", subtopics: ["Ekosistem Kavramı", "Besin Zinciri", "Enerji Akışı", "Madde Döngüleri"] },
+                    { name: "Güncel Çevre Sorunları", subtopics: ["Küresel Isınma", "Su Kirliliği", "Hava Kirliliği", "Biyolojik Çeşitlilik"] }
+                ]
+            },
+            tarih: {
+                name: "Tarih",
+                icon: "fas fa-landmark",
+                colorClass: "bg-social",
+                questionCount: 5,
+                topics: [
+                    { name: "Tarih Bilimi" },
+                    { name: "İlk Çağ Uygarlıkları" },
+                    { name: "İlk Türk Devletleri" },
+                    { name: "İslam Tarihi ve Uygarlığı" },
+                    { name: "Türk-İslam Devletleri" },
+                    { name: "Osmanlı Kuruluş Dönemi" },
+                    { name: "Osmanlı Yükselme Dönemi" },
+                    { name: "Osmanlı Duraklama Dönemi" },
+                    { name: "Osmanlı Gerileme Dönemi" },
+                    { name: "Osmanlı Dağılma Dönemi" },
+                    { name: "Kurtuluş Savaşı Hazırlık" },
+                    { name: "Kurtuluş Savaşı Muharebeler" },
+                    { name: "İnkılaplar" },
+                    { name: "Atatürk İlkeleri" },
+                    { name: "Atatürk Dönemi Dış Politika" }
+                ]
+            },
+            cografya: {
+                name: "Coğrafya",
+                icon: "fas fa-globe-europe",
+                colorClass: "bg-science",
+                questionCount: 5,
+                topics: [
+                    { name: "Coğrafi Konum" },
+                    { name: "Harita Bilgisi" },
+                    { name: "Dünya'nın Şekli ve Hareketleri" },
+                    { name: "İklim Bilgisi" },
+                    { name: "Türkiye'nin İklimi" },
+                    { name: "Yeryüzü Şekilleri" },
+                    { name: "Türkiye'nin Yeryüzü Şekilleri" },
+                    { name: "Nüfus ve Yerleşme" },
+                    { name: "Türkiye'de Nüfus" },
+                    { name: "Ekonomik Faaliyetler" },
+                    { name: "Doğal Afetler" }
+                ]
+            },
+            felsefe: {
+                name: "Felsefe",
+                icon: "fas fa-brain",
+                colorClass: "bg-turkish",
+                questionCount: 5,
+                topics: [
+                    { name: "Felsefenin Konusu" },
+                    { name: "Bilgi Felsefesi" },
+                    { name: "Varlık Felsefesi" },
+                    { name: "Ahlak Felsefesi" },
+                    { name: "Sanat Felsefesi" },
+                    { name: "Din Felsefesi" },
+                    { name: "Siyaset Felsefesi" }
+                ]
+            },
+            din: {
+                name: "Din Kültürü",
+                icon: "fas fa-mosque",
+                colorClass: "bg-chemistry",
+                questionCount: 5,
+                topics: [
+                    { name: "Din ve İslam" },
+                    { name: "İslam'ın İnanç Esasları" },
+                    { name: "İslam'ın İbadet Esasları" },
+                    { name: "Hz. Muhammed'in Hayatı" },
+                    { name: "Kur'an ve Yorumlanması" },
+                    { name: "İslam Düşüncesinde Yorumlar" },
+                    { name: "İslam ve Bilim" },
+                    { name: "İslam ve Ahlak" }
+                ]
+            }
+        };
+
+        // AYT Sayısal Konuları
+        const aytSubjects = {
+            matematik: {
+                name: "Matematik",
+                icon: "fas fa-calculator",
+                colorClass: "bg-math",
+                questionCount: 40,
+                topics: [
+                    { name: "Temel Kavramlar ve Sayılar", subtopics: ["Sayı Kümeleri", "Rasyonel ve İrrasyonel Sayılar"] },
+                    { name: "Fonksiyonlar", subtopics: ["Fonksiyon Çeşitleri", "Grafik Çizimi", "Tek-Çift Fonksiyon", "Artan-Azalan"] },
+                    { name: "Polinomlar", subtopics: ["Polinom İşlemleri", "Bölme", "Çarpanlara Ayırma", "Kökler"] },
+                    { name: "İkinci Dereceden Denklemler", subtopics: ["Çözüm Yöntemleri", "Kök-Katsayı İlişkisi", "Parabol"] },
+                    { name: "Denklem ve Eşitsizlik Sistemleri", subtopics: ["Lineer Sistemler", "Parametreli Sistemler"] },
+                    { name: "Üstel ve Logaritmik Fonksiyonlar", subtopics: ["Üstel Fonksiyonlar", "Logaritma", "Doğal Logaritma"] },
+                    { name: "Diziler", subtopics: ["Aritmetik Dizi", "Geometrik Dizi", "Fibonacci", "Genel Terim"] },
+                    { name: "Trigonometri", subtopics: ["Trigonometrik Oranlar", "Birim Çember", "Trigonometrik Fonksiyonlar", "Ters Trigonometrik Fonksiyonlar", "Toplam-Fark Formülleri"] },
+                    { name: "Analitik Geometri", subtopics: ["Doğru Denklemi", "İki Doğrunun Durumu", "Nokta-Doğru Uzaklığı", "Çember Denklemi"] },
+                    { name: "Limit ve Süreklilik", subtopics: ["Limit Kavramı", "Limit Alma Kuralları", "Belirsizlik", "Süreklilik"] },
+                    { name: "Türev", subtopics: ["Türev Tanımı", "Türev Kuralları", "Bileşke Fonksiyonun Türevi", "Trigonometrik Türev", "Üstel ve Logaritmik Türev"] },
+                    { name: "Türev Uygulamaları", subtopics: ["Teğet ve Normal", "Artan-Azalan", "Ekstremum", "Büküm Noktası", "Maksimum-Minimum Problemleri"] },
+                    { name: "İntegral", subtopics: ["Belirsiz İntegral", "İntegral Kuralları", "Değişken Değiştirme", "Kısmi İntegral"] },
+                    { name: "İntegral Uygulamaları", subtopics: ["Belirli İntegral", "Alan Hesabı", "Hacim Hesabı"] }
+                ]
+            },
+            geometri: {
+                name: "Geometri",
+                icon: "fas fa-shapes",
+                colorClass: "bg-geometry",
+                questionCount: 10,
+                topics: [
+                    { name: "Temel Kavramlar", subtopics: ["Nokta-Doğru-Düzlem", "Açı Çeşitleri", "Açı Ölçme"] },
+                    { name: "Doğruda ve Üçgende Açılar", subtopics: ["Doğruda Açılar", "Paralel Doğrularda Açılar", "Üçgende Açılar"] },
+                    { name: "Üçgenler", subtopics: ["Üçgen Çeşitleri", "Üçgende Temel Elemanlar", "Üçgen Eşitliği"] },
+                    { name: "Üçgende Benzerlik", subtopics: ["Benzerlik Kriterleri", "Benzerlik Uygulamaları"] },
+                    { name: "Üçgende Açı-Kenar Bağıntıları", subtopics: ["Sinüs Teoremi", "Kosinüs Teoremi", "Açı-Kenar İlişkisi"] },
+                    { name: "Üçgende Alan", subtopics: ["Alan Formülleri", "Yükseklik", "Kenarortay", "Açıortay"] },
+                    { name: "Çokgenler", subtopics: ["Çokgen Çeşitleri", "Düzgün Çokgenler", "Çokgende Açı ve Köşegen"] },
+                    { name: "Dörtgenler", subtopics: ["Paralelkenar", "Dikdörtgen", "Kare", "Eşkenar Dörtgen", "Yamuk"] },
+                    { name: "Çember ve Daire", subtopics: ["Çember Elemanları", "Merkez Açı", "Çevre Açı", "Kiriş-Teğet", "Daire Alan"] },
+                    { name: "Katı Cisimler", subtopics: ["Prizma", "Piramit", "Silindir", "Koni", "Küre"] },
+                    { name: "Analitik Geometri", subtopics: ["Koordinat Sistemi", "İki Nokta Arası Uzaklık", "Bölme Bağıntısı"] },
+                    { name: "Koordinat Düzlemi", subtopics: ["Nokta ve Doğru", "Üçgenin Alanı"] },
+                    { name: "Doğrunun Analitik İncelenmesi", subtopics: ["Doğru Denklemi", "Eğim", "Paralel ve Dik Doğrular"] },
+                    { name: "Çemberin Analitik İncelenmesi", subtopics: ["Çember Denklemi", "Teğet Doğru", "Çemberlerin Durumu"] },
+                    { name: "Dönüşümler", subtopics: ["Öteleme", "Yansıma", "Dönme", "Homoteti"] }
+                ]
+            },
+            fizik: {
+                name: "Fizik",
+                icon: "fas fa-bolt",
+                colorClass: "bg-physics",
+                questionCount: 14,
+                topics: [
+                    { name: "Vektörler", subtopics: ["Vektör Kavramı", "Vektörel İşlemler", "Bileşke Vektör"] },
+                    { name: "Kuvvet ve Hareket", subtopics: ["Newton Yasaları", "Ağırlık ve Kütle", "Sürtünme Kuvveti"] },
+                    { name: "Dinamik", subtopics: ["Düzgün Çembersel Hareket", "Merkezcil Kuvvet", "Genel Çekim"] },
+                    { name: "İş, Güç ve Enerji", subtopics: ["İş", "Güç", "Enerji Çeşitleri", "Enerji Korunumu"] },
+                    { name: "İtme ve Momentum", subtopics: ["Momentum", "İtme", "Çarpışmalar", "Momentum Korunumu"] },
+                    { name: "Tork ve Denge", subtopics: ["Tork", "Denge Çeşitleri", "Ağırlık Merkezi"] },
+                    { name: "Basit Harmonik Hareket", subtopics: ["BHH Tanımı", "Yay-Kütle Sistemi", "Sarkaç"] },
+                    { name: "Dalga Mekaniği", subtopics: ["Dalga Özellikleri", "Ses Dalgaları", "Doppler Etkisi"] },
+                    { name: "Elektrik Alan ve Potansiyel", subtopics: ["Elektrik Alan", "Potansiyel", "Sığa", "Kondansatörler"] },
+                    { name: "Manyetik Alan ve Kuvvet", subtopics: ["Manyetik Alan", "Akım Taşıyan Telde Kuvvet", "Yüklü Parçacıklarda Kuvvet"] },
+                    { name: "Elektromanyetik İndüksiyon", subtopics: ["Faraday Yasası", "Lenz Yasası", "İndüksiyon"] },
+                    { name: "Alternatif Akım", subtopics: ["AC Devreleri", "Transformatör"] },
+                    { name: "Işık ve Optik", subtopics: ["Işığın Doğası", "Girişim", "Kırınım", "Polarizasyon"] },
+                    { name: "Atom Fiziğine Giriş", subtopics: ["Atom Modelleri", "Fotoelektrik Olay", "Compton Olayı"] },
+                    { name: "Radyoaktivite", subtopics: ["Radyoaktif Bozunma", "Yarı Ömür", "Bozunma Türleri"] },
+                    { name: "Modern Fizik", subtopics: ["Özel Görelilik", "Kütle-Enerji Denkliği"] }
+                ]
+            },
+            kimya: {
+                name: "Kimya",
+                icon: "fas fa-vial",
+                colorClass: "bg-chemistry",
+                questionCount: 13,
+                topics: [
+                    { name: "Modern Atom Teorisi", subtopics: ["Kuantum Sayıları", "Orbital Kavramı", "Elektron Dizilimi"] },
+                    { name: "Gazlar", subtopics: ["İdeal Gaz Yasası", "Gaz Karışımları", "Gerçek Gazlar"] },
+                    { name: "Sıvı Çözeltiler ve Çözünürlük", subtopics: ["Derişim Birimleri", "Koligatif Özellikler", "Çözünürlük"] },
+                    { name: "Kimyasal Tepkimelerde Enerji", subtopics: ["Entalpi", "Hess Yasası", "Bağ Enerjisi"] },
+                    { name: "Kimyasal Tepkimelerde Hız", subtopics: ["Tepkime Hızı", "Hıza Etki Eden Faktörler", "Aktifleşme Enerjisi"] },
+                    { name: "Kimyasal Tepkimelerde Denge", subtopics: ["Denge Sabiti", "Le Chatelier İlkesi", "Denge Hesaplamaları"] },
+                    { name: "Asit-Baz Dengesi", subtopics: ["pH ve pOH", "Tampon Çözeltiler", "Titrasyon"] },
+                    { name: "Çözünürlük Dengesi", subtopics: ["Çözünürlük Çarpımı", "Çöktürme"] },
+                    { name: "Elektrokimya", subtopics: ["Redoks Tepkimeleri", "Piller", "Elektroliz"] },
+                    { name: "Organik Kimyaya Giriş", subtopics: ["Organik Bileşikler", "Hibridleşme", "İzomeri"] },
+                    { name: "Hidrokarbonlar", subtopics: ["Alkanlar", "Alkenler", "Alkinler", "Aromatikler"] },
+                    { name: "Fonksiyonel Gruplar", subtopics: ["Alkoller", "Eterler", "Aldehitler", "Ketonlar", "Karboksilli Asitler", "Esterler", "Aminler"] },
+                    { name: "Organik Tepkimeler", subtopics: ["Yanma", "Yer Değiştirme", "Katılma", "Eliminasyon"] },
+                    { name: "Enerji Kaynakları", subtopics: ["Fosil Yakıtlar", "Nükleer Enerji", "Yenilenebilir Enerji"] }
+                ]
+            },
+            biyoloji: {
+                name: "Biyoloji",
+                icon: "fas fa-leaf",
+                colorClass: "bg-biology",
+                questionCount: 13,
+                topics: [
+                    { name: "Nükleik Asitler ve Protein Sentezi", subtopics: ["DNA Yapısı", "RNA Çeşitleri", "Replikasyon", "Transkripsiyon", "Translasyon"] },
+                    { name: "Canlılarda Enerji Dönüşümleri", subtopics: ["ATP", "Enzimler"] },
+                    { name: "Fotosentez", subtopics: ["Işık Reaksiyonları", "Karbon Reaksiyonları", "Fotosentez Hızı"] },
+                    { name: "Kemosentez", subtopics: ["Kemosentez Yapan Canlılar", "Kemosentez Reaksiyonları"] },
+                    { name: "Hücresel Solunum", subtopics: ["Glikoliz", "Krebs Döngüsü", "ETS", "Fermantasyon"] },
+                    { name: "Canlılarda Sindirim", subtopics: ["Sindirim Sistemi", "Sindirim Enzimleri", "Emilim"] },
+                    { name: "Canlılarda Solunum", subtopics: ["Solunum Sistemi", "Gaz Değişimi", "Solunum Çeşitleri"] },
+                    { name: "Canlılarda Dolaşım", subtopics: ["Dolaşım Sistemi", "Kan", "Kalp", "Damarlar", "Lenf Sistemi"] },
+                    { name: "Canlılarda Boşaltım", subtopics: ["Boşaltım Sistemi", "Nefron", "İdrar Oluşumu"] },
+                    { name: "Canlılarda Düzenleyici Sistemler", subtopics: ["Geri Bildirim", "Homeostazi"] },
+                    { name: "Sinir Sistemi", subtopics: ["Nöron", "Sinir İletimi", "Merkezi Sinir Sistemi", "Çevresel Sinir Sistemi"] },
+                    { name: "Endokrin Sistem", subtopics: ["Hormonlar", "Endokrin Bezler", "Hormon Düzenlenmesi"] },
+                    { name: "Duyu Organları", subtopics: ["Göz", "Kulak", "Burun", "Dil", "Deri"] },
+                    { name: "Destek ve Hareket Sistemi", subtopics: ["Kemikler", "Eklemler", "Kaslar"] },
+                    { name: "Üreme Sistemi", subtopics: ["Erkek Üreme Sistemi", "Dişi Üreme Sistemi", "Embriyonik Gelişim"] },
+                    { name: "Komünite ve Popülasyon Ekolojisi", subtopics: ["Popülasyon Dinamiği", "Türler Arası İlişkiler", "Süksesyon"] },
+                    { name: "Biyoteknoloji ve Genetik Mühendisliği", subtopics: ["Gen Klonlama", "PCR", "GDO", "Gen Terapisi"] }
+                ]
+            }
+        };
+
+        // Motivasyon Sözleri
+        const quotes = [
+            { text: "Başarı, her gün tekrarlanan küçük çabaların toplamıdır.", author: "Robert Collier" },
+            { text: "Gelecek, bugün ne yaptığına bağlıdır.", author: "Mahatma Gandhi" },
+            { text: "Hayallerin büyüklüğü, başarının büyüklüğünü belirler.", author: "Anonim" },
+            { text: "Bir adım at, yol seni bulacaktır.", author: "Mevlana" },
+            { text: "Başarısızlık, başarıya giden yolda sadece bir duraktır.", author: "Zig Ziglar" },
+            { text: "Bugünün işini yarına bırakma.", author: "Benjamin Franklin" },
+            { text: "Yapabileceğine inan, yarı yoldasın demektir.", author: "Theodore Roosevelt" },
+            { text: "Azim, başarının anahtarıdır.", author: "Anonim" },
+            { text: "Her şey imkansız görünür, ta ki yapılana kadar.", author: "Nelson Mandela" },
+            { text: "Başarı bir yolculuktur, varış noktası değil.", author: "Ben Sweetland" }
+        ];
+
+        let currentUser = null;
+        let userData = {};
+        let currentDenemeType = 'tyt';
+        let currentModalSubject = null;
+        let tempWrongTopics = {};
+        let editingDenemeId = null;
+
+        // Helper function to get topic count
+        function getTopicCount(subjects) {
+            let count = 0;
+            for (const subject of Object.values(subjects)) {
+                count += subject.topics.length;
+                subject.topics.forEach(t => { count += t.subtopics?.length || 0; });
+            }
+            return count;
+        }
+
+        // Login Function
+        function login() {
+            const username = document.getElementById('usernameInput').value.trim();
+            if (username.length < 2) {
+                document.getElementById('usernameInput').style.borderColor = '#f43f5e';
+                return;
+            }
+            currentUser = username;
+            localStorage.setItem('yks_lastUser', username);
+            loadUserData();
+            showApp();
+        }
+
+        document.getElementById('usernameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+
+        function loadUserData() {
+            const savedData = localStorage.getItem(`yks_${currentUser}`);
+            if (savedData) {
+                userData = JSON.parse(savedData);
+            } else {
+                userData = { tyt: {}, ayt: {}, denemeler: [], wrongTopics: { tyt: {}, ayt: {} } };
+            }
+            if (!userData.wrongTopics) userData.wrongTopics = { tyt: {}, ayt: {} };
+            if (!userData.denemeler) userData.denemeler = [];
+        }
+
+        function saveUserData() {
+            localStorage.setItem(`yks_${currentUser}`, JSON.stringify(userData));
+        }
+
+        function showApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            document.getElementById('displayName').textContent = currentUser;
+
+            const quote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('motivationQuote').innerHTML = `"${quote.text}"`;
+            document.querySelector('.motivation-card .author').textContent = `- ${quote.author}`;
+            document.getElementById('denemeDate').valueAsDate = new Date();
+
+            renderSubjects();
+            updateStats();
+            renderCharts();
+            renderDenemeForms();
+            renderEksikKonular();
+            renderDenemeHistory();
+        }
+
+        function logout() {
+            currentUser = null;
+            userData = {};
+            document.getElementById('appContainer').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('usernameInput').value = '';
+        }
+
+        function renderSubjects() {
+            renderSubjectList('tytSubjects', tytSubjects, 'tyt');
+            renderSubjectList('aytSubjects', aytSubjects, 'ayt');
+        }
+
+        function renderSubjectList(containerId, subjects, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            for (const [key, subject] of Object.entries(subjects)) {
+                const completedTopics = userData[type]?.[key] || [];
+                const total = subject.topics.length + subject.topics.reduce((sum, t) => sum + (t.subtopics?.length || 0), 0);
+                const completed = completedTopics.length;
+                const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                
+                let topicsHtml = '';
+                subject.topics.forEach((topic, tIndex) => {
+                    const topicId = `${tIndex}`;
+                    const isTopicCompleted = completedTopics.includes(topicId);
+                    const wrongCount = getWrongCount(type, key, topicId);
+                    const hasSubtopics = topic.subtopics && topic.subtopics.length > 0;
+                    
+                    topicsHtml += `
+                        <div class="topic-item ${isTopicCompleted ? 'completed' : ''}" data-topic-id="${topicId}">
+                            ${hasSubtopics ? `<button class="topic-expand-btn" onclick="event.stopPropagation(); toggleSubtopics(this, '${type}', '${key}', ${tIndex})"><i class="fas fa-plus"></i></button>` : ''}
+                            <div class="topic-checkbox" onclick="toggleTopic('${type}', '${key}', '${topicId}', this.parentElement)">
+                                ${isTopicCompleted ? '<i class="fas fa-check"></i>' : ''}
+                            </div>
+                            <span class="topic-text" onclick="toggleTopic('${type}', '${key}', '${topicId}', this.parentElement)">${topic.name}</span>
+                            ${wrongCount > 0 ? `<span class="topic-wrong-count">${wrongCount} yanlış</span>` : ''}
+                        </div>
+                        <div class="subtopics-container" id="subtopics_${type}_${key}_${tIndex}">
+                            ${(topic.subtopics || []).map((sub, sIndex) => {
+                                const subId = `${tIndex}_${sIndex}`;
+                                const isSubCompleted = completedTopics.includes(subId);
+                                const subWrongCount = getWrongCount(type, key, subId);
+                                return `
+                                    <div class="subtopic-item ${isSubCompleted ? 'completed' : ''}" onclick="toggleTopic('${type}', '${key}', '${subId}', this)">
+                                        <div class="subtopic-checkbox">
+                                            ${isSubCompleted ? '<i class="fas fa-check"></i>' : ''}
+                                        </div>
+                                        <span class="subtopic-text">${sub}</span>
+                                        ${subWrongCount > 0 ? `<span class="topic-wrong-count">${subWrongCount}</span>` : ''}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="subject-header" onclick="toggleTopics(this)">
+                        <div class="subject-title">
+                            <div class="subject-icon ${subject.colorClass}">
+                                <i class="${subject.icon}"></i>
+                            </div>
+                            <h3>${subject.name}</h3>
+                        </div>
+                        <div class="subject-progress">
+                            <div class="percentage">${percentage}%</div>
+                            <div class="count">${completed} / ${total}</div>
+                        </div>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="topics-list">${topicsHtml}</div>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        function toggleSubtopics(btn, type, key, tIndex) {
+            const container = document.getElementById(`subtopics_${type}_${key}_${tIndex}`);
+            const icon = btn.querySelector('i');
+            container.classList.toggle('open');
+            icon.className = container.classList.contains('open') ? 'fas fa-minus' : 'fas fa-plus';
+        }
+
+        function getWrongCount(type, subject, topicId) {
+            if (!userData.wrongTopics[type]?.[subject]?.[topicId]) return 0;
+            return userData.wrongTopics[type][subject][topicId];
+        }
+
+        function toggleTopics(header) {
+            header.classList.toggle('open');
+            header.nextElementSibling.classList.toggle('open');
+        }
+
+        function toggleTopic(type, subject, topicId, element) {
+            if (!userData[type][subject]) userData[type][subject] = [];
+            
+            const index = userData[type][subject].indexOf(topicId);
+            if (index > -1) {
+                userData[type][subject].splice(index, 1);
+                element.classList.remove('completed');
+                element.querySelector('.topic-checkbox, .subtopic-checkbox').innerHTML = '';
+            } else {
+                userData[type][subject].push(topicId);
+                element.classList.add('completed');
+                element.querySelector('.topic-checkbox, .subtopic-checkbox').innerHTML = '<i class="fas fa-check"></i>';
+            }
+            saveUserData();
+            updateStats();
+            renderCharts();
+        }
+
+        function updateStats() {
+            let tytCompleted = 0, tytTotal = 0;
+            for (const [key, subject] of Object.entries(tytSubjects)) {
+                const topicCount = subject.topics.length + subject.topics.reduce((sum, t) => sum + (t.subtopics?.length || 0), 0);
+                tytTotal += topicCount;
+                tytCompleted += (userData.tyt[key] || []).length;
+            }
+            const tytPercentage = tytTotal > 0 ? Math.round((tytCompleted / tytTotal) * 100) : 0;
+            document.getElementById('tytOverall').textContent = tytPercentage + '%';
+            document.getElementById('tytProgressBar').style.width = tytPercentage + '%';
+            document.getElementById('tytDetail').textContent = `${tytCompleted} / ${tytTotal} konu tamamlandı`;
+
+            let aytCompleted = 0, aytTotal = 0;
+            for (const [key, subject] of Object.entries(aytSubjects)) {
+                const topicCount = subject.topics.length + subject.topics.reduce((sum, t) => sum + (t.subtopics?.length || 0), 0);
+                aytTotal += topicCount;
+                aytCompleted += (userData.ayt[key] || []).length;
+            }
+            const aytPercentage = aytTotal > 0 ? Math.round((aytCompleted / aytTotal) * 100) : 0;
+            document.getElementById('aytOverall').textContent = aytPercentage + '%';
+            document.getElementById('aytProgressBar').style.width = aytPercentage + '%';
+            document.getElementById('aytDetail').textContent = `${aytCompleted} / ${aytTotal} konu tamamlandı`;
+
+            const totalCompleted = tytCompleted + aytCompleted;
+            const totalTopics = tytTotal + aytTotal;
+            const totalPercentage = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
+            document.getElementById('totalOverall').textContent = totalPercentage + '%';
+            document.getElementById('totalProgressBar').style.width = totalPercentage + '%';
+            document.getElementById('totalDetail').textContent = `${totalCompleted} / ${totalTopics} konu tamamlandı`;
+        }
+
+        function renderCharts() {
+            renderBarChart('tytChart', tytSubjects, 'tyt');
+            renderBarChart('aytChart', aytSubjects, 'ayt');
+        }
+
+        function renderBarChart(containerId, subjects, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            const colors = [
+                'linear-gradient(90deg, #f472b6, #ec4899)',
+                'linear-gradient(90deg, #a78bfa, #8b5cf6)',
+                'linear-gradient(90deg, #67e8f9, #06b6d4)',
+                'linear-gradient(90deg, #fbbf24, #f59e0b)',
+                'linear-gradient(90deg, #60a5fa, #3b82f6)',
+                'linear-gradient(90deg, #34d399, #10b981)',
+                'linear-gradient(90deg, #fb7185, #f43f5e)',
+                'linear-gradient(90deg, #c084fc, #a855f7)',
+                'linear-gradient(90deg, #f97316, #ea580c)'
+            ];
+
+            let colorIndex = 0;
+            for (const [key, subject] of Object.entries(subjects)) {
+                const total = subject.topics.length + subject.topics.reduce((sum, t) => sum + (t.subtopics?.length || 0), 0);
+                const completed = (userData[type][key] || []).length;
+                const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+                const barItem = document.createElement('div');
+                barItem.className = 'bar-item';
+                barItem.innerHTML = `
+                    <span class="bar-label">${subject.name.substring(0, 10)}</span>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="width: ${percentage}%; background: ${colors[colorIndex % colors.length]}">
+                            ${percentage > 10 ? percentage + '%' : ''}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(barItem);
+                colorIndex++;
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        // Deneme Functions
+        function renderDenemeForms() {
+            renderDenemeForm('tytDenemeForm', tytSubjects, 'tyt');
+            renderDenemeForm('aytDenemeForm', aytSubjects, 'ayt');
+            tempWrongTopics = { tyt: {}, ayt: {} };
+        }
+
+        function renderDenemeForm(containerId, subjects, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            for (const [key, subject] of Object.entries(subjects)) {
+                const row = document.createElement('div');
+                row.className = 'form-row';
+                row.innerHTML = `
+                    <label>${subject.name}</label>
+                    <input type="number" id="${type}_${key}_dogru" placeholder="D" min="0" max="${subject.questionCount}" onchange="calculateNet()">
+                    <input type="number" id="${type}_${key}_yanlis" placeholder="Y" min="0" max="${subject.questionCount}" onchange="calculateNet()">
+                    <input type="number" id="${type}_${key}_bos" placeholder="B" min="0" max="${subject.questionCount}" readonly>
+                    <button class="wrong-topics-btn" onclick="openWrongTopicsModal('${type}', '${key}')" id="btn_${type}_${key}">
+                        <i class="fas fa-list"></i> Konular
+                    </button>
+                `;
+                container.appendChild(row);
+            }
+        }
+
+        function switchDenemeTab(type) {
+            currentDenemeType = type;
+            document.querySelectorAll('.deneme-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.deneme-form').forEach(form => form.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(type + 'DenemeForm').classList.add('active');
+            calculateNet();
+        }
+
+        function calculateNet() {
+            const subjects = currentDenemeType === 'tyt' ? tytSubjects : aytSubjects;
+            let totalNet = 0;
+
+            for (const [key, subject] of Object.entries(subjects)) {
+                const dogru = parseInt(document.getElementById(`${currentDenemeType}_${key}_dogru`)?.value) || 0;
+                const yanlis = parseInt(document.getElementById(`${currentDenemeType}_${key}_yanlis`)?.value) || 0;
+                const bos = subject.questionCount - dogru - yanlis;
+                
+                const bosInput = document.getElementById(`${currentDenemeType}_${key}_bos`);
+                if (bosInput) bosInput.value = bos >= 0 ? bos : 0;
+
+                totalNet += dogru - (yanlis / 4);
+            }
+            document.getElementById('currentNet').textContent = totalNet.toFixed(2);
+        }
+
+        function openWrongTopicsModal(type, subjectKey) {
+            currentModalSubject = { type, subjectKey };
+            const subjects = type === 'tyt' ? tytSubjects : aytSubjects;
+            const subject = subjects[subjectKey];
+            const modalTopics = document.getElementById('modalTopics');
+            modalTopics.innerHTML = '';
+
+            const selectedTopics = tempWrongTopics[type][subjectKey] || [];
+
+            subject.topics.forEach((topic, tIndex) => {
+                const topicId = `${tIndex}`;
+                const isSelected = selectedTopics.includes(topicId);
+                const hasSubtopics = topic.subtopics && topic.subtopics.length > 0;
+
+                const topicDiv = document.createElement('div');
+                topicDiv.innerHTML = `
+                    <div class="modal-topic-item ${isSelected ? 'selected' : ''}" data-topic-id="${topicId}">
+                        ${hasSubtopics ? `<button class="modal-expand-btn" onclick="event.stopPropagation(); toggleModalSubtopics(this, ${tIndex})"><i class="fas fa-plus"></i></button>` : ''}
+                        <div class="checkbox" onclick="toggleModalTopic(this.parentElement, '${topicId}')">${isSelected ? '<i class="fas fa-check"></i>' : ''}</div>
+                        <span class="modal-topic-name" onclick="toggleModalTopic(this.parentElement, '${topicId}')">${topic.name}</span>
+                    </div>
+                    <div class="modal-subtopics" id="modal_subtopics_${tIndex}">
+                        ${(topic.subtopics || []).map((sub, sIndex) => {
+                            const subId = `${tIndex}_${sIndex}`;
+                            const isSubSelected = selectedTopics.includes(subId);
+                            return `
+                                <div class="modal-subtopic-item ${isSubSelected ? 'selected' : ''}" data-topic-id="${subId}" onclick="toggleModalTopic(this, '${subId}')">
+                                    <div class="checkbox">${isSubSelected ? '<i class="fas fa-check"></i>' : ''}</div>
+                                    <span>${sub}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                modalTopics.appendChild(topicDiv);
+            });
+
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function toggleModalSubtopics(btn, tIndex) {
+            const container = document.getElementById(`modal_subtopics_${tIndex}`);
+            const icon = btn.querySelector('i');
+            container.classList.toggle('open');
+            icon.className = container.classList.contains('open') ? 'fas fa-minus' : 'fas fa-plus';
+        }
+
+        function toggleModalTopic(element, topicId) {
+            element.classList.toggle('selected');
+            const checkbox = element.querySelector('.checkbox');
+            checkbox.innerHTML = element.classList.contains('selected') ? '<i class="fas fa-check"></i>' : '';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function saveWrongTopics() {
+            const { type, subjectKey } = currentModalSubject;
+            const selectedItems = document.querySelectorAll('#modalTopics .modal-topic-item.selected, #modalTopics .modal-subtopic-item.selected');
+            
+            tempWrongTopics[type][subjectKey] = [];
+            selectedItems.forEach(item => {
+                tempWrongTopics[type][subjectKey].push(item.dataset.topicId);
+            });
+
+            const btn = document.getElementById(`btn_${type}_${subjectKey}`);
+            if (tempWrongTopics[type][subjectKey].length > 0) {
+                btn.classList.add('has-selection');
+                btn.innerHTML = `<i class="fas fa-check"></i> ${tempWrongTopics[type][subjectKey].length} konu`;
+            } else {
+                btn.classList.remove('has-selection');
+                btn.innerHTML = `<i class="fas fa-list"></i> Konular`;
+            }
+            closeModal();
+        }
+
+        function saveDeneme() {
+            const date = document.getElementById('denemeDate').value;
+            if (!date) { alert('Lütfen tarih seçin!'); return; }
+
+            const subjects = currentDenemeType === 'tyt' ? tytSubjects : aytSubjects;
+            
+            // If editing, remove old wrong topics first
+            if (editingDenemeId) {
+                const oldDeneme = userData.denemeler.find(d => d.id === editingDenemeId);
+                if (oldDeneme && oldDeneme.wrongTopics) {
+                    for (const [subKey, topics] of Object.entries(oldDeneme.wrongTopics)) {
+                        if (userData.wrongTopics[oldDeneme.type]?.[subKey]) {
+                            topics.forEach(topicId => {
+                                if (userData.wrongTopics[oldDeneme.type][subKey][topicId]) {
+                                    userData.wrongTopics[oldDeneme.type][subKey][topicId]--;
+                                    if (userData.wrongTopics[oldDeneme.type][subKey][topicId] <= 0) {
+                                        delete userData.wrongTopics[oldDeneme.type][subKey][topicId];
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            const denemeData = {
+                id: editingDenemeId || Date.now(),
+                type: currentDenemeType,
+                date: date,
+                subjects: {},
+                wrongTopics: JSON.parse(JSON.stringify(tempWrongTopics[currentDenemeType])),
+                totalNet: parseFloat(document.getElementById('currentNet').textContent)
+            };
+
+            for (const [key, subject] of Object.entries(subjects)) {
+                const dogru = parseInt(document.getElementById(`${currentDenemeType}_${key}_dogru`)?.value) || 0;
+                const yanlis = parseInt(document.getElementById(`${currentDenemeType}_${key}_yanlis`)?.value) || 0;
+                denemeData.subjects[key] = { dogru, yanlis };
+
+                // Add new wrong topics
+                if (tempWrongTopics[currentDenemeType][key]) {
+                    if (!userData.wrongTopics[currentDenemeType][key]) {
+                        userData.wrongTopics[currentDenemeType][key] = {};
+                    }
+                    tempWrongTopics[currentDenemeType][key].forEach(topicId => {
+                        userData.wrongTopics[currentDenemeType][key][topicId] = 
+                            (userData.wrongTopics[currentDenemeType][key][topicId] || 0) + 1;
+                    });
+                }
+            }
+
+            if (editingDenemeId) {
+                const index = userData.denemeler.findIndex(d => d.id === editingDenemeId);
+                if (index > -1) userData.denemeler[index] = denemeData;
+            } else {
+                userData.denemeler.push(denemeData);
+            }
+
+            saveUserData();
+            cancelEdit();
+            renderDenemeForms();
+            renderEksikKonular();
+            renderDenemeHistory();
+            renderSubjects();
+            alert(editingDenemeId ? 'Deneme güncellendi! ✨' : 'Deneme kaydedildi! 🎉');
+        }
+
+        function editDeneme(id) {
+            const deneme = userData.denemeler.find(d => d.id === id);
+            if (!deneme) return;
+
+            editingDenemeId = id;
+            currentDenemeType = deneme.type;
+
+            // Switch to correct tab
+            document.querySelectorAll('.deneme-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.deneme-form').forEach(form => form.classList.remove('active'));
+            document.querySelector(`.deneme-tab-btn:${deneme.type === 'tyt' ? 'first-child' : 'last-child'}`).classList.add('active');
+            document.getElementById(deneme.type + 'DenemeForm').classList.add('active');
+
+            // Fill form
+            document.getElementById('denemeDate').value = deneme.date;
+            
+            const subjects = deneme.type === 'tyt' ? tytSubjects : aytSubjects;
+            for (const [key] of Object.entries(subjects)) {
+                const data = deneme.subjects[key] || { dogru: 0, yanlis: 0 };
+                document.getElementById(`${deneme.type}_${key}_dogru`).value = data.dogru || '';
+                document.getElementById(`${deneme.type}_${key}_yanlis`).value = data.yanlis || '';
+            }
+
+            // Load wrong topics
+            tempWrongTopics[deneme.type] = JSON.parse(JSON.stringify(deneme.wrongTopics || {}));
+            
+            // Update buttons
+            for (const [key] of Object.entries(subjects)) {
+                const btn = document.getElementById(`btn_${deneme.type}_${key}`);
+                const count = (tempWrongTopics[deneme.type][key] || []).length;
+                if (count > 0) {
+                    btn.classList.add('has-selection');
+                    btn.innerHTML = `<i class="fas fa-check"></i> ${count} konu`;
+                }
+            }
+
+            calculateNet();
+
+            // Update UI
+            document.getElementById('denemeFormTitle').innerHTML = '<i class="fas fa-edit" style="color: var(--warning-dark);"></i> Deneme Düzenle';
+            document.getElementById('saveDenemeBtn').innerHTML = '<i class="fas fa-save"></i> Güncelle';
+            document.getElementById('cancelEditBtn').style.display = 'block';
+
+            // Scroll to form
+            document.querySelector('.deneme-form-card').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelEdit() {
+            editingDenemeId = null;
+            document.getElementById('denemeFormTitle').innerHTML = '<i class="fas fa-plus-circle" style="color: var(--primary);"></i> Yeni Deneme Ekle';
+            document.getElementById('saveDenemeBtn').innerHTML = '<i class="fas fa-save"></i> Denemeyi Kaydet';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            
+            // Clear form
+            const subjects = currentDenemeType === 'tyt' ? tytSubjects : aytSubjects;
+            for (const [key] of Object.entries(subjects)) {
+                document.getElementById(`${currentDenemeType}_${key}_dogru`).value = '';
+                document.getElementById(`${currentDenemeType}_${key}_yanlis`).value = '';
+                document.getElementById(`${currentDenemeType}_${key}_bos`).value = '';
+                const btn = document.getElementById(`btn_${currentDenemeType}_${key}`);
+                btn.classList.remove('has-selection');
+                btn.innerHTML = `<i class="fas fa-list"></i> Konular`;
+            }
+            tempWrongTopics = { tyt: {}, ayt: {} };
+            document.getElementById('currentNet').textContent = '0.00';
+            document.getElementById('denemeDate').valueAsDate = new Date();
+        }
+
+        function renderEksikKonular() {
+            const eksikList = document.getElementById('eksikList');
+            const allWrong = [];
+
+            ['tyt', 'ayt'].forEach(type => {
+                const subjects = type === 'tyt' ? tytSubjects : aytSubjects;
+                for (const [subjectKey, wrongTopics] of Object.entries(userData.wrongTopics[type] || {})) {
+                    for (const [topicId, count] of Object.entries(wrongTopics)) {
+                        if (count > 0) {
+                            const parts = topicId.split('_');
+                            const tIndex = parseInt(parts[0]);
+                            let topicName = subjects[subjectKey]?.topics[tIndex]?.name || 'Bilinmeyen';
+                            if (parts.length > 1) {
+                                const sIndex = parseInt(parts[1]);
+                                topicName = subjects[subjectKey]?.topics[tIndex]?.subtopics?.[sIndex] || topicName;
+                            }
+                            allWrong.push({
+                                type, subjectKey, topicId,
+                                subjectName: subjects[subjectKey]?.name || 'Bilinmeyen',
+                                topicName, count
+                            });
+                        }
+                    }
+                }
+            });
+
+            allWrong.sort((a, b) => b.count - a.count);
+
+            if (allWrong.length === 0) {
+                eksikList.innerHTML = `
+                    <div class="no-eksik">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Henüz yanlış yapılan konu yok!</p>
+                        <p style="font-size: 0.9rem;">Deneme ekleyerek eksiklerini takip edebilirsin.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            eksikList.innerHTML = allWrong.slice(0, 15).map(item => `
+                <div class="eksik-item">
+                    <div class="topic-info">
+                        <div class="topic-name">${item.topicName}</div>
+                        <div class="subject-name">${item.type.toUpperCase()} - ${item.subjectName}</div>
+                    </div>
+                    <div class="eksik-actions">
+                        <button class="tekrar-btn" onclick="clearWrongTopic('${item.type}', '${item.subjectKey}', '${item.topicId}')">
+                            <i class="fas fa-check"></i> Tekrar Ettim
+                        </button>
+                        <div class="wrong-badge">${item.count} yanlış</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function clearWrongTopic(type, subjectKey, topicId) {
+            if (!confirm('Bu konuyu tekrar ettiğini onaylıyor musun? Yanlış sayısı sıfırlanacak.')) return;
+            
+            if (userData.wrongTopics[type]?.[subjectKey]?.[topicId]) {
+                delete userData.wrongTopics[type][subjectKey][topicId];
+                
+                // Clean up empty objects
+                if (Object.keys(userData.wrongTopics[type][subjectKey]).length === 0) {
+                    delete userData.wrongTopics[type][subjectKey];
+                }
+                
+                saveUserData();
+                renderEksikKonular();
+                renderSubjects();
+            }
+        }
+
+        function renderDenemeHistory() {
+            const historyContainer = document.getElementById('denemeHistory');
+            const denemeler = userData.denemeler || [];
+
+            if (denemeler.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="no-eksik" style="grid-column: 1 / -1;">
+                        <i class="fas fa-clipboard-list" style="color: var(--primary);"></i>
+                        <p>Henüz deneme eklenmemiş!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const sortedDenemeler = [...denemeler].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            historyContainer.innerHTML = sortedDenemeler.map(deneme => {
+                const subjects = deneme.type === 'tyt' ? tytSubjects : aytSubjects;
+                const subjectsHtml = Object.entries(deneme.subjects || {}).map(([key, data]) => 
+                    `<span class="history-subject">${subjects[key]?.name?.substring(0, 3) || key}: <span class="d">${data.dogru}D</span> <span class="y">${data.yanlis}Y</span></span>`
+                ).join('');
+
+                return `
+                    <div class="history-card">
+                        <span class="type-badge ${deneme.type}">${deneme.type.toUpperCase()}</span>
+                        <div class="date"><i class="fas fa-calendar"></i> ${new Date(deneme.date).toLocaleDateString('tr-TR')}</div>
+                        <div class="net-info">${(deneme.totalNet || 0).toFixed(2)} Net</div>
+                        <div class="history-subjects">${subjectsHtml}</div>
+                        <div class="history-actions">
+                            <button class="edit-history-btn" onclick="editDeneme(${deneme.id})">
+                                <i class="fas fa-edit"></i> Düzenle
+                            </button>
+                            <button class="delete-history-btn" onclick="deleteDeneme(${deneme.id})">
+                                <i class="fas fa-trash"></i> Sil
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteDeneme(id) {
+            if (!confirm('Bu denemeyi silmek istediğinize emin misiniz?')) return;
+
+            const index = userData.denemeler.findIndex(d => d.id === id);
+            if (index > -1) {
+                const deneme = userData.denemeler[index];
+                
+                if (deneme.wrongTopics) {
+                    for (const [subjectKey, topics] of Object.entries(deneme.wrongTopics)) {
+                        if (userData.wrongTopics[deneme.type]?.[subjectKey]) {
+                            topics.forEach(topicId => {
+                                if (userData.wrongTopics[deneme.type][subjectKey][topicId]) {
+                                    userData.wrongTopics[deneme.type][subjectKey][topicId]--;
+                                    if (userData.wrongTopics[deneme.type][subjectKey][topicId] <= 0) {
+                                        delete userData.wrongTopics[deneme.type][subjectKey][topicId];
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+
+                userData.denemeler.splice(index, 1);
+                saveUserData();
+                renderDenemeHistory();
+                renderEksikKonular();
+                renderSubjects();
+            }
+        }
+
+        window.onload = function() {
+            const lastUser = localStorage.getItem('yks_lastUser');
+            if (lastUser) document.getElementById('usernameInput').value = lastUser;
+        };
+    </script>
+</body>
+</html>
