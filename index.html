@@ -1727,6 +1727,19 @@
             saveUserData();
             updateStats();
             renderCharts();
+            
+            // Update subject card progress instantly
+            const card = element.closest('.subject-card');
+            if (card) {
+                const subjects = type === 'tyt' ? tytSubjects : aytSubjects;
+                const subjectData = subjects[subject];
+                const total = subjectData.topics.length + subjectData.topics.reduce((sum, t) => sum + (t.subtopics?.length || 0), 0);
+                const completed = (userData[type][subject] || []).length;
+                const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+                
+                card.querySelector('.percentage').textContent = percentage + '%';
+                card.querySelector('.count').textContent = `${completed} / ${total}`;
+            }
         }
 
         function updateStats() {
